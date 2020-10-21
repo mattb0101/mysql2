@@ -1,4 +1,5 @@
 import os
+import datetime
 import pymysql
 
 #Get username from GitHub workspace
@@ -13,10 +14,11 @@ connection = pymysql.connect(host='localhost',
 try:
     # Run a Query
     with connection.cursor() as cursor:
-        SQL = "SELECT * FROM Artist;"
-        cursor.execute(SQL)
-        result = cursor.fetchall()
-        print(result)
+        names = ["Jim", "Bob"]
+        # Prepare a string with the same number of placceholders
+        format_strings = ','.join(['%s']*len(names))
+        cursor.execute("DELETE FROM Friends WHERE name in ({});".format(format_strings), names)
+        connection.commit()
 finally: 
 #Close the connection regardless of whether success or not!
     connection.close()
